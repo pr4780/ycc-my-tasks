@@ -25,15 +25,27 @@ function addNewTask() {
     const elem_input = document.getElementById('new_task');
     const task_name = elem_input.value;
 
-    // 2. Создать новый элемент li
-    const elem_li = document.createElement('li');
-    elem_li.innerText = task_name;
+    if (task_name != '' && task_name != null) {
+        // 2. Создать новый элемент div
+        const elem_div = document.createElement('div');
+        elem_div.innerHTML = `
+        <input type="checkbox" />
+        <label>${task_name}</label>`
 
-    // 3. Вставить новый элемент в начало списка
-    const elem_ul = document.getElementById('task_list');
-    elem_ul.prepend(elem_li);
+        // 3. Вставить новый элемент в начало списка
+        const elem_ul = document.getElementById('task_list');
+        elem_ul.prepend(elem_div);
+
+        // 4. Очищаем значение в инпуте
+        elem_input.value = '';
+    }
 }
 
 const btn = document.getElementById('btn_click');
 btn.onclick = addNewTask;
 
+document.onkeydown = (ev) => {
+    if (ev.code === 'Enter') {
+        addNewTask();
+    }
+};
