@@ -1,19 +1,18 @@
-let counterTask = 4;
+const keyTaskList = 'keyTaskList';
+const keyCounter = 'keyCounter';
+let tasks = [];
+let counterTask = 0;
 
-let tasks = [
-    {
-        id: 1,
-        text: 'Выбрать наряд на 13-ое апреля'
-    },
-    {
-        id: 2,
-        text: 'Купить праздничный торт'
-    },
-    {
-        id: 3,
-        text: 'Спрыгнуть с парашютом'
-    },
-]
+// Получаем массив в задач из localStorage, если он есть
+if (localStorage.getItem(keyTaskList)) {
+    let tasksAsString = localStorage.getItem(keyTaskList);
+    tasks = JSON.parse(tasksAsString);
+
+    // Извлекаем из localStorage счетчик для Id задачи
+    if (localStorage.getItem(keyCounter)){
+        counterTask = +localStorage.getItem(keyCounter);
+    }
+}
 
 function addNewTask() {
     // 1. Получить инпут и текст в нем
@@ -23,11 +22,19 @@ function addNewTask() {
         // 2. Вызов метода по отрисовке нового элемента
         createTaskElement(counterTask, task_name);
 
-        // 3. Очищаем значение в инпуте
+        // 3. Обновляем локальный список задач и значение в localStorage
+        tasks.push({
+            id: counterTask,
+            title: task_name
+        });
+        localStorage.setItem(keyTaskList, JSON.stringify(tasks));
+
+        // 4. Очищаем значение в инпуте
         elem_input.value = '';
 
         // 4. Инкремент счетчика
         counterTask++;
+        localStorage.setItem(keyCounter, counterTask);
     }
 }
 
@@ -44,7 +51,7 @@ function createTaskElement(taskId, title) {
 }
 
 // Отрисовываем задачи из списка tasks
-tasks.forEach(x => createTaskElement(x.id, x.text))
+tasks.forEach(x => createTaskElement(x.id, x.title))
 
 const btn = document.getElementById('btn_click');
 btn.onclick = addNewTask;
